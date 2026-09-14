@@ -1,26 +1,29 @@
-[
-  {
-    "id": "playtorrio-torrent-bridge",
-    "name": "PlayTorrio Torrent Bridge",
-    "description": "Nuvio provider using a public Stremio-compatible torrent stream endpoint. This is a bridge, not PlayTorrio's embedded Dart scrapers.",
-    "version": "1.0.0",
-    "author": "Custom",
-    "supportedTypes": [
-      "movie",
-      "tv"
-    ],
-    "filename": "providers/playtorrio-torrent-bridge.js",
-    "enabled": true,
-    "formats": [
-      "mkv",
-      "mp4",
-      "webm"
-    ],
-    "contentLanguage": [
-      "en"
-    ],
-    "limited": false,
-    "disabledPlatforms": [],
-    "supportsExternalPlayer": true
-  }
-]
+{
+  "name": "PlayTorrio Nuvio",
+  "version": "1.0.1",
+  "scrapers": [
+    {
+      "id": "playtorrio-torrent-bridge",
+      "name": "PlayTorrio Torrent Bridge",
+      "description": "Torrent streams for Nuvio",
+      "version": "1.0.1",
+      "author": "Custom",
+      "supportedTypes": [
+        "movie",
+        "tv"
+      ],
+      "filename": "providers/playtorrio-torrent-bridge.js",
+      "enabled": true,
+      "formats": [
+        "mkv",
+        "mp4",
+        "webm"
+      ],
+      "contentLanguage": [
+        "en"
+      ],
+      "limited": false,
+      "supportsExternalPlayer": true
+    }
+  ]
+}
