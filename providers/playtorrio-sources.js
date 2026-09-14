@@ -1,89 +1,40 @@
 /*
- * PlayTorrio Sources for Nuvio
- * Torrentio bridge
+ * PlayTorrio True Sources for Nuvio
+ *
+ * Goal:
+ *   - Use the same torrent source family used by PlayTorrioV3 where it
+ *     can be reached from a browser-compatible Nuvio provider.
+ *   - Knaben is queried directly through its documented JSON API.
+ *   - Torrentio is used as a Stremio-compatible fallback.
+ *
+ * Nuvio signature:
+ *   getStreams(tmdbId, mediaType, season, episode)
+ *
+ * Important:
+ *   Nuvio supplies a TMDB id, while Knaben needs a title query.
+ *   We therefore try Cinemeta-compatible metadata lookup first.
+ *   If that lookup is unavailable, the Torrentio fallback is still tried
+ *   using tmdb:<id>.
  */
 
-function getStreams(tmdbId, mediaType, season, episode) {
-  var type = mediaType === "tv" ? "series" : "movie";
-  var rawId = String(tmdbId || "").trim();
+var CINEMETA = "https://v3-cinemeta.strem.io/meta";
+var KNABEN = "https://api.knaben.org/v1";
+var TORRENTIO = "https://torrentio.strem.fun/stream";
 
-  if (!rawId) {
-    return Promise.resolve([]);
-  }
-
-  var streamId =
-    rawId.indexOf("tt") === 0
-      ? rawId
-      : (rawId.indexOf("tmdb:") === 0
-          ? rawId
-          : "tmdb:" + rawId);
-
-  if (type === "series") {
-    if (season == null || episode == null) {
-      return Promise.resolve([]);
-    }
-
-    streamId =
-      streamId +
-      ":" +
-      String(season) +
-      ":" +
-      String(episode);
-  }
-
-  var url =
-    "https://torrentio.strem.fun/stream/" +
-    type +
-    "/" +
-    encodeURIComponent(streamId) +
-    ".json";
-
-  return fetch(url)
-    .then(function (response) {
-      if (!response.ok) {
-        throw new Error("HTTP " + response.status);
-      }
-      return response.json();
-    })
-    .then(function (data) {
-      var streams =
-        Array.isArray(data && data.streams)
-          ? data.streams
-          : [];
-
-      return streams
-        .filter(function (s) {
-          return s && s.url;
-        })
-        .map(function (s) {
-          var hints = s.behaviorHints || {};
-
-          return {
-            name: "PlayTorrio",
-            title: s.title || s.name || "Torrent stream",
-            url: s.url,
-            quality: s.quality || "Auto",
-            size:
-              hints.videoSize != null
-                ? String(hints.videoSize)
-                : undefined,
-            headers: s.headers || undefined
-          };
-        });
-    })
-    .catch(function (error) {
-      console.log(
-        "[PlayTorrio] " +
-        String(error && error.message || error)
-      );
-
-      return [];
-    });
+function safeString(value) {
+  return value == null ? "" : String(value).trim();
 }
 
-module.exports = {
-  getStreams: getStreams
-};    title: title || "Torrent stream",
+function mediaKind(mediaType) {
+  return mediaType === "tv" || mediaType === "series"
+    ? "series"
+    : "movie";
+}
+
+function makeStream(name, title, url, quality, size, headers) {
+  var result = {
+    name: name,
+    title: title || "Torrent stream",
     url: url,
     quality: quality || "Auto"
   };
