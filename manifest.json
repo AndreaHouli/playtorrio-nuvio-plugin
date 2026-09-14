@@ -1,18 +1,21 @@
 {
-  "name": "PlayTorrio Nuvio",
-  "version": "1.0.1",
+  "id": "playtorrio.nuvio.true-sources",
+  "name": "PlayTorrio True Sources",
+  "version": "1.0.3",
+  "description": "Nuvio provider using PlayTorrio-compatible torrent sources: Knaben plus Stremio/Torrentio fallback.",
+  "author": "Custom",
   "scrapers": [
     {
-      "id": "playtorrio-torrent-bridge",
-      "name": "PlayTorrio Torrent Bridge",
-      "description": "Torrent streams for Nuvio",
-      "version": "1.0.1",
+      "id": "playtorrio-sources",
+      "name": "PlayTorrio Sources",
+      "description": "Knaben torrent search with Torrentio fallback",
+      "version": "1.0.3",
       "author": "Custom",
       "supportedTypes": [
         "movie",
         "tv"
       ],
-      "filename": "providers/playtorrio-torrent-bridge.js",
+      "filename": "providers/playtorrio-sources.js",
       "enabled": true,
       "formats": [
         "mkv",
